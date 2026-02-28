@@ -39,7 +39,7 @@ export class AuthController {
       throw Boom.badRequest('Request body is required');
     }
 
-    const { email, password } = req.body;
+    const { email, password, roles } = req.body;
 
     if (email === undefined) {
       throw Boom.badRequest('Email is required');
@@ -49,7 +49,11 @@ export class AuthController {
       throw Boom.badRequest('Password is required');
     }
 
-    const user = this.authService.createUser({ email, password });
+    if (!Array.isArray(roles)) {
+      throw Boom.badRequest('Roles must be an array');
+    }
+
+    const user = this.authService.createUser({ email, password, roles });
     return res.status(201).json(user);
   };
 }

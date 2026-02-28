@@ -43,6 +43,7 @@ export class AuthService {
       id: new Date().getTime().toString(),
       email: data.email,
       password: data.password,
+      roles: data.roles,
     };
 
     this.users.push(newUser);

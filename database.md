@@ -6,20 +6,23 @@ The following tables must be created in the DB before running the application.
 
 ```sql
 CREATE TABLE users (
-    id int NOT NULL PRIMARY KEY,
-    email TEXT NOT NULL,
-    password TEXT NOT NULL
+    id UUID NOT NULL PRIMARY KEY,
+    email TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL,
+    roles TEXT[]
 );
 ```
 
 ## Posts
 
 ```sql
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
 CREATE TABLE posts (
-    id int NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     imageUrl TEXT NOT NULL,
-    userId int NOT NULL REFERENCES users(id)
+    userId UUID NOT NULL REFERENCES users(id)
 );
 ```

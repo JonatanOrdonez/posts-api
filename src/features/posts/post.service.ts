@@ -28,6 +28,7 @@ export class PostService {
       title: post.title,
       description: post.description,
       imageUrl: post.imageUrl,
+      userId: post.userId,
     };
     this.posts.push(newPost);
     return newPost;

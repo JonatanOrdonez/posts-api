@@ -24,10 +24,14 @@ export class PostController {
       throw Boom.badRequest('Request body is required');
     }
 
-    const { title, description, imageUrl } = req.body;
+    const { title, description, imageUrl, userId } = req.body;
 
     if (title === undefined) {
       throw Boom.badRequest('Title is required');
+    }
+
+    if (userId === undefined) {
+      throw Boom.badRequest('User ID is required');
     }
 
     if (description === undefined) {
@@ -42,6 +46,7 @@ export class PostController {
       title,
       description,
       imageUrl,
+      userId,
     });
 
     return res.json(post);

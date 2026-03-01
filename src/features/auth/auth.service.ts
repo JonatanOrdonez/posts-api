@@ -1,4 +1,9 @@
-import { AuthenticateUserDTO, CreateUserDTO, User } from './auth.types';
+import {
+  AuthenticateUserDTO,
+  CreateUserDTO,
+  UpdateUserDTO,
+  User,
+} from './auth.types';
 import Boom from '@hapi/boom';
 
 export class AuthService {
@@ -40,13 +45,35 @@ export class AuthService {
     }
 
     const newUser: User = {
-      id: new Date().getTime().toString(),
+      id: crypto.randomUUID(),
       email: data.email,
       password: data.password,
-      roles: data.roles,
+      role: data.role,
+      name: data.name ?? null,
+      address: data.address ?? null,
     };
 
     this.users.push(newUser);
     return newUser;
+  };
+
+  updateUser = (user: UpdateUserDTO): User => {
+    const { id, name, address } = user;
+    const userIndex = this.users.findIndex((user) => user.id === id);
+
+    if (userIndex === -1) {
+      throw Boom.notFound('User not found');
+    }
+
+    const userAtIndex = this.users[userIndex];
+
+    const updatedUser = {
+      ...userAtIndex,
+      name: name === undefined ? userAtIndex.name : name,
+      address: address === undefined ? userAtIndex.address : address,
+    };
+
+    this.users[userIndex] = updatedUser;
+    return updatedUser;
   };
 }

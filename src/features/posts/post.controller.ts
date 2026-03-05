@@ -7,8 +7,10 @@ import {
   getPostsService,
   updatePostService,
 } from './post.service';
+import { getUserFromRequest } from '../../middlewares/authMiddleware';
 
 export const getPostsController = async (req: Request, res: Response) => {
+  const user = await getUserFromRequest(req);
   const posts = await getPostsService();
   return res.json(posts);
 };

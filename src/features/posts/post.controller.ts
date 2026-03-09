@@ -7,6 +7,7 @@ import {
   getPostsService,
   updatePostService,
 } from './post.service';
+import { getUserFromRequest } from '../../middlewares/authMiddleware';
 
 export const getPostsController = async (req: Request, res: Response) => {
   const posts = await getPostsService();
@@ -20,11 +21,13 @@ export const getPostByIdController = async (req: Request, res: Response) => {
 };
 
 export const createPostController = async (req: Request, res: Response) => {
+  const user = getUserFromRequest(req);
+
   if (!req.body) {
     throw Boom.badRequest('Request body is required');
   }
 
-  const { title, description, imageUrl, userId } = req.body;
+  const { title, description, imageUrl } = req.body;
 
   if (title === undefined) {
     throw Boom.badRequest('Title is required');
@@ -38,15 +41,11 @@ export const createPostController = async (req: Request, res: Response) => {
     throw Boom.badRequest('Image URL is required');
   }
 
-  if (userId === undefined) {
-    throw Boom.badRequest('User ID is required');
-  }
-
   const post = await createPostService({
     title,
     description,
     imageUrl,
-    userId,
+    userId: user.id,
   });
   return res.status(201).json(post);
 };
